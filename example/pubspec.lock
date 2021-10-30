@@ -60,9 +60,11 @@ packages:
   dart_discord_rpc_ffi:
     dependency: transitive
     description:
-      path: "../ffi"
-      relative: true
-    source: path
+      path: ffi
+      ref: HEAD
+      resolved-ref: "72e5f414ccdfee32975f9280cd7eb88fea0e7742"
+      url: "https://github.com/RPMTW/dart_discord_rpc.git"
+    source: git
     version: "0.0.2"
   fake_async:
     dependency: transitive
