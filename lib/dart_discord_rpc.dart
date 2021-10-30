@@ -74,7 +74,7 @@ class DiscordRPC extends ffi.DiscordClient {
       );
     } else if (Platform.isMacOS) {
       _dynamicLibrary = DynamicLibrary.open(
-          join(dirname(Platform.resolvedExecutable), "discord_game_sdk.dylib"));
+          join(dirname(Platform.resolvedExecutable), "libdiscord-rpc.dylib"));
     }
   }
 }
