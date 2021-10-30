@@ -68,15 +68,20 @@ class DiscordClient {
 
   /// Starts the Discord Rich Presence.
   void start() {
+    bindings = ffi.DiscordClient(dynamicLibrary);
+
     var discordCreateParams = calloc<ffi.DiscordCreateParams>();
-    var discordCore = calloc<Pointer<ffi.IDiscordCore>>();
+    var _discordCore = calloc<Pointer<ffi.IDiscordCore>>();
+
+    // bindings.memset(,sizeOf());
 
     discordCreateParams.ref.client_id = applicationId;
     discordCreateParams.ref.flags =
         ffi.EDiscordCreateFlags.DiscordCreateFlags_Default;
+    discordCore = _discordCore.value.ref;
 
-    _bindings = ffi.DiscordClient(dynamicLibrary);
-    _bindings.DiscordCreate(1, discordCreateParams, discordCore);
+    bindings.DiscordCreate(
+        ffi.DISCORD_VERSION, discordCreateParams, _discordCore);
   }
 
   /// Updates the presence of the [DiscordUser], takes [DiscordPresence] as argument.
@@ -85,7 +90,8 @@ class DiscordClient {
   /// For showing the user's start time from present, you must pass [DiscordPresence.startTimeStamp] as `DateTime.now().millisecondsSinceEpoch`.
   ///
   void updatePresence(DiscordPresence presence) {
-    // var presencePtr = calloc<ffi.DiscordRichPresence>();
+    var presence = calloc<ffi.DiscordPresence>();
+
     // presencePtr.ref.state = (presence.state ?? '').toNativeUtf8();
     // presencePtr.ref.details = (presence.details ?? '').toNativeUtf8();
     // presencePtr.ref.startTimestamp = presence.startTimeStamp ?? 0;
@@ -104,8 +110,14 @@ class DiscordClient {
     // presencePtr.ref.spectateSecret =
     //     (presence.spectateSecret ?? '').toNativeUtf8();
     // presencePtr.ref.instance = presence.instance ?? 0;
-    // _bindings.Discord_UpdatePresence(presencePtr);
-    // calloc.free(presencePtr);
+    var updateActivity = discordCore.get_activity_manager
+        .cast<ffi.IDiscordActivityManager>()
+        .ref
+        .update_activity;
+
+    // updateActivity();
+
+    calloc.free(presence);
   }
 
   /// Shuts down the Discord RPC.
@@ -126,5 +138,7 @@ class DiscordClient {
     // );
   }
 
-  late ffi.DiscordClient _bindings;
+  late ffi.DiscordClient bindings;
+  late ffi.DiscordUser users;
+  late ffi.IDiscordCore discordCore;
 }

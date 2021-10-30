@@ -22,8 +22,18 @@ ffigen:
   dart-bool: true
   headers:
     entry-points:
-      - "headers/discord_game_sdk.h"
+      - "headers/**.h"
   name: "DiscordClient"
   description: "Dart bindings to Discord Game SDK client."
   llvm-path:
-   - /usr/lib/llvm-13
+    - /usr/lib/llvm-13
+  comments:
+    style: any
+    length: full
+  sort: true
+  preamble: "// ignore_for_file: camel_case_types, non_constant_identifier_names"
+  globals:
+    rename:
+      # Removes '_' from
+      # beginning of a name.
+      "_(.*)": "$1"
