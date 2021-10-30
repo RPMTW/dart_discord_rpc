@@ -13,13 +13,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DiscordRPC discord = DiscordRPC(
-    applicationId: '877853131025809438',
+    applicationId: 903883530822627370,
   );
 
   @override
   void initState() {
     super.initState();
-    discord.start(autoRegister: true);
+    discord.start();
     discord.updatePresence(
       DiscordPresence(
         state: 'Discord Rich Presence from Dart. 🎯',
