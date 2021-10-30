@@ -3,8 +3,7 @@ import 'dart:io';
 import 'dart:ffi';
 import 'package:path/path.dart';
 import 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart' as ffi;
-export 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart'
-    show DiscordPresence;
+export 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart' hide DiscordRPC;
 
 /// ## Discord Rich Presence for Dart & Flutter.
 ///
@@ -39,11 +38,11 @@ export 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart'
 /// );
 /// ```
 ///
-class DiscordRPC extends ffi.DiscordClient {
+class DiscordRPC extends ffi.DiscordRPC {
   DiscordRPC({required int applicationId, String? steamId})
       : super(
           dynamicLibrary: _dynamicLibrary,
-          applicationId: applicationId,
+          applicationId: applicationId.toString(),
           steamId: steamId,
         );
 
@@ -62,14 +61,14 @@ class DiscordRPC extends ffi.DiscordClient {
         join(
           dirname(Platform.resolvedExecutable),
           'lib',
-          'discord_game_sdk.so',
+          'libdiscord-rpc.so',
         ),
       );
     } else if (Platform.isWindows) {
       _dynamicLibrary = DynamicLibrary.open(
         join(
           dirname(Platform.resolvedExecutable),
-          'discord_game_sdk.dll',
+          'discord-rpc.dll',
         ),
       );
     } else if (Platform.isMacOS) {

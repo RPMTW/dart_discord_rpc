@@ -1,15 +1,16 @@
 import 'dart:io';
 import 'dart:ffi';
+
 import 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart';
 
 void main(List<String> args) {
-  var discord = DiscordClient(
+  var discord = DiscordRPC(
     dynamicLibrary: DynamicLibrary.open(
       '/absolute/path/to/libdiscord-rpc.so',
     ),
-    applicationId: 877853131025809438,
+    applicationId: '877853131025809438',
   );
-  discord.start();
+  discord.start(autoRegister: true);
   discord.updatePresence(
     DiscordPresence(
       state: 'Discord Rich Presence from Dart. 🎯',

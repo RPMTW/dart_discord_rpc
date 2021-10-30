@@ -18,22 +18,13 @@ dev_dependencies:
   ffigen: ^3.0.0
 
 ffigen:
-  output: "lib/generated/bindings.dart"
+  output: 'lib/generated/bindings.dart'
   dart-bool: true
   headers:
     entry-points:
-      - "headers/**.h"
-  name: "DiscordClient"
-  description: "Dart bindings to Discord Game SDK client."
+      - 'headers/discord_register.h'
+      - 'headers/discord_rpc.h'
+  name: 'DiscordRPC'
+  description: 'Dart bindings to Discord RPC client.'
   llvm-path:
     - /usr/lib/llvm-13
-  comments:
-    style: any
-    length: full
-  sort: true
-  preamble: "// ignore_for_file: camel_case_types, non_constant_identifier_names"
-  globals:
-    rename:
-      # Removes '_' from
-      # beginning of a name.
-      "_(.*)": "$1"
