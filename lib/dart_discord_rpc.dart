@@ -73,7 +73,7 @@ class DiscordRPC extends ffi.DiscordRPC {
       );
     } else if (Platform.isMacOS) {
       _dynamicLibrary = DynamicLibrary.open(
-          join(dirname(dirname(Platform.resolvedExecutable)), "libdiscord-rpc.dylib"));
+          join(dirname(Platform.resolvedExecutable), "libdiscord-rpc.dylib"));
     }
   }
 }
