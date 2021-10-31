@@ -62,8 +62,8 @@ packages:
     description:
       path: ffi
       ref: HEAD
-      resolved-ref: "09df1ca257db297cc816d6bb83c5752d94a6ddac"
-      url: "https://github.com/alexmercerind/dart_discord_rpc"
+      resolved-ref: "9e92e68a772c31828cec55b988672fecce4f07bb"
+      url: "https://github.com/RPMTW/dart_discord_rpc.git"
     source: git
     version: "0.0.2"
   fake_async:

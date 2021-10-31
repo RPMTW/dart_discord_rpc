@@ -1,6 +1,7 @@
 // ignore_for_file: implementation_imports
 import 'dart:io';
 import 'dart:ffi';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart' as ffi;
 export 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart' hide DiscordRPC;
@@ -72,8 +73,7 @@ class DiscordRPC extends ffi.DiscordRPC {
         ),
       );
     } else if (Platform.isMacOS) {
-      _dynamicLibrary = DynamicLibrary.open(
-          join(dirname(Platform.resolvedExecutable), "libdiscord-rpc.dylib"));
+      _dynamicLibrary = DynamicLibrary.open("bin/libdiscord-rpc.dylib");
     }
   }
 }
