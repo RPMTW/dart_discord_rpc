@@ -58,11 +58,12 @@ class DiscordRPC extends ffi.DiscordRPC {
   /// }
   /// ```
   ///
-  static Future<void> initialize() async {
+  static Future<void> initialize(Directory? libTempPath) async {
     WidgetsFlutterBinding.ensureInitialized();
     String libName = getLibraryFileName('discord-rpc.so');
 
-    File libFile = File(join(dirname(Platform.resolvedExecutable), libName));
+    File libFile =
+        File(join((libTempPath ?? Directory.systemTemp).absolute.path, libName));
 
     libFile
       ..createSync(recursive: true)

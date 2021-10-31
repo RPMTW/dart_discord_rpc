@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 
 void main() async {
-  await DiscordRPC.initialize();
+  await DiscordRPC.initialize(Directory.systemTemp);
   runApp(MyApp());
 }
 
