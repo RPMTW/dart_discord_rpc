@@ -1,6 +1,8 @@
 // ignore_for_file: implementation_imports
 import 'dart:io';
 import 'dart:ffi';
+import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart' as ffi;
@@ -56,19 +58,31 @@ class DiscordRPC extends ffi.DiscordRPC {
   /// }
   /// ```
   ///
-  static void initialize() {
-    if (Platform.isLinux) {
-      _dynamicLibrary = DynamicLibrary.open(join(
-        'ffi-bin',
-        'libdiscord-rpc.so',
-      ));
-    } else if (Platform.isWindows) {
-      _dynamicLibrary =
-          DynamicLibrary.open(join('ffi-bin', 'ffi-bin/discord-rpc.dll'));
-    } else if (Platform.isMacOS) {
-      _dynamicLibrary =
-          DynamicLibrary.open(join('ffi-bin', 'ffi-bin/libdiscord-rpc.dylib'));
-    }
+  static Future<void> initialize() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    String libName = getLibraryFileName('discord-rpc.so');
+
+    File libFile = File(join(dirname(Platform.resolvedExecutable), libName));
+
+    libFile
+      ..createSync(recursive: true)
+      ..writeAsBytesSync(
+          (await rootBundle.load("packages/dart_discord_rpc/ffi-bin/$libName")).buffer.asUint8List());
+    _dynamicLibrary = DynamicLibrary.open(libFile.path);
+  }
+
+  static String getLibraryFileName(String filename) {
+    // Windows doesn't use
+    if (!Platform.isWindows) filename = 'lib$filename';
+
+    return setExtension(filename, getPlatformExtension());
+  }
+
+  static String getPlatformExtension() {
+    if (Platform.isLinux) return '.so';
+    if (Platform.isMacOS) return '.dylib';
+    if (Platform.isWindows) return '.dll';
+    throw 'Unsupported platform ${Platform.operatingSystem}';
   }
 }
 
