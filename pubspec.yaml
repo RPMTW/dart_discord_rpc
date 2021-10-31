@@ -27,11 +27,7 @@ dependency_overrides:
     path: ffi
 
 flutter:
-  plugin:
-    platforms:
-      linux:
-        pluginClass: DartDiscordRpcPlugin
-      windows:
-        pluginClass: DartDiscordRpcPlugin
   assets:
-    - macos-bin/libdiscord-rpc.dylib
+    - ffi-bin/libdiscord-rpc.dylib
+    - ffi-bin/libdiscord-rpc.so
+    - ffi-bin/discord-rpc.dll

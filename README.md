@@ -1,8 +1,8 @@
-<h1 align='center'><a href='https://github.com/alexmercerind/dart_discord_rpc'>dart_discord_rpc</a></h1>
+<h1 align='center'><a href='https://github.com/RPMTW/dart_discord_rpc'>dart_discord_rpc</a></h1>
 <h4 align='center'>Discord Rich Presence for Flutter & Dart apps & games.</h4>
 <br></br>
 
-<p align='center'><img height='160' src='https://github.com/alexmercerind/dart_discord_rpc/blob/master/image.png?raw=true'></img>
+<p align='center'><img height='160' src='https://raw.githubusercontent.com/RPMTW/dart_discord_rpc/main/image.png'></img>
 </p>
 
 ## Install 
@@ -87,19 +87,7 @@ rpc.events.listen((event) {
 
 There are other features for you to checkout.
 
-## Support
-
-Consider supporting the project by starring the repository or buying me a coffee.
-
-<a href='https://www.buymeacoffee.com/alexmercerind'><img src='https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=alexmercerind&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff'></a>
-
-
-## License 
-
-Copyright (c) 2021 Hitesh Kumar Saini <saini123hitesh@gmail.com>
-
-MIT. Contributions welcomed.
-
+Original project: https://github.com/alexmercerind/dart_discord_rpc
 
 ## Platforms 
 
@@ -107,3 +95,4 @@ Supported
 
 - Windows
 - Linux
+- MacOS
