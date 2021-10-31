@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 
 void main() async {
-  await DiscordRPC.initialize(Directory.systemTemp);
+  await DiscordRPC.initialize(libTempPath: Directory.systemTemp);
   runApp(MyApp());
 }
 
