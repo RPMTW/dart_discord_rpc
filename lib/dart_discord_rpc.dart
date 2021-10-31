@@ -67,7 +67,9 @@ class DiscordRPC extends ffi.DiscordRPC {
     libFile
       ..createSync(recursive: true)
       ..writeAsBytesSync(
-          (await rootBundle.load("packages/dart_discord_rpc/ffi-bin/$libName")).buffer.asUint8List());
+          (await rootBundle.load("packages/dart_discord_rpc/ffi-bin/$libName"))
+              .buffer
+              .asUint8List());
     _dynamicLibrary = DynamicLibrary.open(libFile.path);
   }
 
