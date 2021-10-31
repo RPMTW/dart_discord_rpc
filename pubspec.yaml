@@ -33,7 +33,5 @@ flutter:
         pluginClass: DartDiscordRpcPlugin
       windows:
         pluginClass: DartDiscordRpcPlugin
-      macos:
-        pluginClass: DartDiscordRpcPlugin
   assets:
     - macos/bin/libdiscord-rpc.dylib
