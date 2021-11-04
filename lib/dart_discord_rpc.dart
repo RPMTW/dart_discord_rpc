@@ -82,8 +82,6 @@ class DiscordRPC {
         applicationId: applicationId,
         steamId: steamId,
         dynamicLibrary: DynamicLibrary.open(libFile.path));
-
-    quit();
   }
 
   void quit() {
