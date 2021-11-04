@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart' as ffi;
+import 'package:uuid/uuid.dart';
 export 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart' hide DiscordRPC;
 
 /// ## Discord Rich Presence for Dart & Flutter.
@@ -41,13 +42,20 @@ export 'package:dart_discord_rpc_ffi/dart_discord_rpc_ffi.dart' hide DiscordRPC;
 /// );
 /// ```
 ///
-class DiscordRPC extends ffi.DiscordRPC {
-  DiscordRPC({required int applicationId, String? steamId})
-      : super(
-          dynamicLibrary: _dynamicLibrary,
-          applicationId: applicationId.toString(),
-          steamId: steamId,
-        );
+class DiscordRPC {
+  late String libName;
+  late File libFile;
+  late DiscordRPCHandler handler;
+
+  int applicationId;
+  String? steamId;
+
+  DiscordRPC(
+      {required this.applicationId, this.steamId, Directory? libTempPath}) {
+    libName = _getLibraryFileName('discord-rpc.so');
+    libFile = File(join((libTempPath ?? Directory.systemTemp).absolute.path,
+        "${Uuid().v4()}-$libName"));
+  }
 
   /// Initializes the plugin.
   ///
@@ -58,30 +66,38 @@ class DiscordRPC extends ffi.DiscordRPC {
   /// }
   /// ```
   ///
-  static Future<void> initialize({Directory? libTempPath}) async {
+  Future<void> initialize() async {
     WidgetsFlutterBinding.ensureInitialized();
-    String libName = getLibraryFileName('discord-rpc.so');
 
-    File libFile = File(
-        join((libTempPath ?? Directory.systemTemp).absolute.path, libName));
+    Uint8List libBytes =
+        (await rootBundle.load("packages/dart_discord_rpc/ffi-bin/$libName"))
+            .buffer
+            .asUint8List();
 
     libFile
       ..createSync(recursive: true)
-      ..writeAsBytesSync(
-          (await rootBundle.load("packages/dart_discord_rpc/ffi-bin/$libName"))
-              .buffer
-              .asUint8List());
-    _dynamicLibrary = DynamicLibrary.open(libFile.path);
+      ..writeAsBytesSync(libBytes);
+
+    handler = DiscordRPCHandler(
+        applicationId: applicationId,
+        steamId: steamId,
+        dynamicLibrary: DynamicLibrary.open(libFile.path));
+
+    quit();
   }
 
-  static String getLibraryFileName(String filename) {
+  void quit() {
+    libFile.deleteSync(recursive: true);
+  }
+
+  String _getLibraryFileName(String filename) {
     // Windows doesn't use
     if (!Platform.isWindows) filename = 'lib$filename';
 
-    return setExtension(filename, getPlatformExtension());
+    return setExtension(filename, _getPlatformExtension());
   }
 
-  static String getPlatformExtension() {
+  String _getPlatformExtension() {
     if (Platform.isLinux) return '.so';
     if (Platform.isMacOS) return '.dylib';
     if (Platform.isWindows) return '.dll';
@@ -89,4 +105,14 @@ class DiscordRPC extends ffi.DiscordRPC {
   }
 }
 
-late DynamicLibrary _dynamicLibrary;
+class DiscordRPCHandler extends ffi.DiscordRPC {
+  DiscordRPCHandler(
+      {required int applicationId,
+      required DynamicLibrary dynamicLibrary,
+      String? steamId})
+      : super(
+          dynamicLibrary: dynamicLibrary,
+          applicationId: applicationId.toString(),
+          steamId: steamId,
+        );
+}

@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 
+late DiscordRPC discord;
 void main() async {
-  await DiscordRPC.initialize(libTempPath: Directory.systemTemp);
+  discord = DiscordRPC(
+      applicationId: 903883530822627370, libTempPath: Directory.systemTemp);
+  await discord.initialize();
   runApp(MyApp());
 }
 
@@ -14,15 +17,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  DiscordRPC discord = DiscordRPC(
-    applicationId: 903883530822627370,
-  );
-
+  // with WidgetsBindingObserver
   @override
   void initState() {
     super.initState();
-    discord.start();
-    discord.updatePresence(
+    // WidgetsBinding.instance!.addObserver(this);
+    discord.handler.start(autoRegister: true);
+    discord.handler.updatePresence(
       DiscordPresence(
         state: 'Discord Rich Presence from Dart. 🎯',
         details: 'github.com/alexmercerind/dart_discord_rpc',
@@ -34,6 +35,20 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+
+  // @override
+  // void dispose() {
+  //   WidgetsBinding.instance!.removeObserver(this);
+  //   super.dispose();
+  // }
+
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   print(state.name);
+  //   if (state == AppLifecycleState.paused) {
+  //     discord.quit();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
