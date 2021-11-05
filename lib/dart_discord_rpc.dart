@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:ffi';
 import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -54,7 +55,7 @@ class DiscordRPC {
       {required this.applicationId, this.steamId, Directory? libTempPath}) {
     libName = _getLibraryFileName('discord-rpc.so');
     libFile = File(join((libTempPath ?? Directory.systemTemp).absolute.path,
-        "${Uuid().v4()}-$libName"));
+        libName));
   }
 
   /// Initializes the plugin.
@@ -74,9 +75,31 @@ class DiscordRPC {
             .buffer
             .asUint8List();
 
-    libFile
-      ..createSync(recursive: true)
-      ..writeAsBytesSync(libBytes);
+    bool needCreateLocalFile() {
+      if (libFile.existsSync()) {
+        String localFileSha265 =
+            sha256.convert(libFile.readAsBytesSync()).toString();
+        String assetsSha265 = sha256.convert(libBytes).toString();
+
+        if (localFileSha265 == assetsSha265) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    }
+
+    if (needCreateLocalFile()) {
+      try {
+        libFile
+          ..createSync(recursive: true)
+          ..writeAsBytesSync(libBytes);
+      } catch (e) {
+        print(e);
+      }
+    }
 
     handler = DiscordRPCHandler(
         applicationId: applicationId,
